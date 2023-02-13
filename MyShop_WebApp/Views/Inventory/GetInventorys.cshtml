@@ -1,0 +1,147 @@
+﻿@model IEnumerable<MyShop_WebApp.Models.Inventory>
+
+
+@{
+    ViewData["Title"] = "GetInventorys";
+
+}
+
+<h1>Inventory list</h1>
+
+<p>
+    <a asp-action="Add">Create New Inventory</a>
+</p>
+<div>
+ <input type="text" id="search-input" placeholder="Search Inventory...">
+<button id="search-button">Search</button>
+
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedAt)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedAt)
+            </td>
+            <td>
+                <a asp-action="UpdateInventory" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="DeleteInventory" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+
+<div class="pagination-container">
+    <ul class="pagination"></ul>
+</div>
+
+@section Scripts {
+<script>
+    $(document).ready(function () {
+        var items = @Html.Raw(Json.Serialize(Model)); // get inventory items from Razor view
+        var pageSize = 5; // set page size
+        var pageCount = Math.ceil(items.length / pageSize); // calculate page count
+
+        for (var i = 1; i <= pageCount; i++) { // create pagination links
+            $(".pagination").append("<li class='page-item'><a class='page-link' href='#'>" + i + "</a></li>");
+        }
+
+        $(".pagination li:first-child").addClass("active"); // highlight first page link
+        showPage(1); // show first page
+
+        $(".pagination li").on("click", function () { // switch pages when page link is clicked
+            $(".pagination li").removeClass("active");
+            $(this).addClass("active");
+            var pageNum = parseInt($(this).text());
+            showPage(pageNum);
+        });
+
+        function showPage(pageNum) { // show specified page
+            var startIndex = (pageNum - 1) * pageSize;
+            var endIndex = startIndex + pageSize;
+            var pageItems = items.slice(startIndex, endIndex);
+            $("tbody tr").hide();
+            $.each(pageItems, function (index, item) {
+                $("tbody tr:eq(" + index + ")").show();
+            });
+        }
+    });
+</script>
+
+<script>
+    //Search Box
+    $(document).ready(function () {
+  $('#search-button').click(function () {
+    var searchQuery = $('#search-input').val().toLowerCase();
+    $('tbody tr').each(function () {
+      var InventoryName = $(this).find('td:eq(0)').text().toLowerCase();
+      var InventoryDescription = $(this).find('td:eq(1)').text().toLowerCase();
+      if (InventoryName.indexOf(searchQuery) == -1 && InventoryDescription.indexOf(searchQuery) == -1) {
+        $(this).hide();
+      } else {
+        $(this).show();
+      }
+    });
+  });
+});
+
+
+</script>
+
+}
+
+@*@section Scripts {
+<script>
+
+    $(document).ready(function () {
+  $('#search-button').click(function () {
+    var searchQuery = $('#search-input').val().toLowerCase();
+    $('tbody tr').each(function () {
+      var InventoryName = $(this).find('td:eq(0)').text().toLowerCase();
+      var InventoryDescription = $(this).find('td:eq(1)').text().toLowerCase();
+      if (InventoryName.indexOf(searchQuery) == -1 && InventoryDescription.indexOf(searchQuery) == -1) {
+        $(this).hide();
+      } else {
+        $(this).show();
+      }
+    });
+  });
+});
+
+
+</script>
+}*@

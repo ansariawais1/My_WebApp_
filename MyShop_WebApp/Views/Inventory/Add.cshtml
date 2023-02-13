@@ -1,0 +1,70 @@
+﻿@model AddInventoryViewModel
+
+@if (Model.Step == 1)
+{
+    <h1>Step 1: Inventory Details</h1>
+
+    <form asp-action="Add" method="post">
+        <div class="form-group">
+            <label asp-for="Inventory.Name">Name</label>
+            <input asp-for="Inventory.Name" class="form-control" />
+            <span asp-validation-for="Inventory.Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Inventory.Description">Description</label>
+            <textarea asp-for="Inventory.Description" class="form-control"></textarea>
+            <span asp-validation-for="Inventory.Description" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Inventory.Price">Price</label>
+            <input asp-for="Inventory.Price" class="form-control" />
+            <span asp-validation-for="Inventory.Price" class="text-danger"></span>
+        </div>
+
+         @*  <div class="form-group">
+            <label asp-for="Inventory.CreatedAt">CreatedAt</label>
+            <input asp-for="Inventory.CreatedAt" class="form-control" />
+            <span asp-validation-for="Inventory.CreatedAt" class="text-danger"></span>
+        </div>*@
+        <button type="submit" class="btn btn-primary">Next</button>
+    </form>
+}
+else @*if (Model.Step == 2)*@
+{
+    <h1>Step 2: Confirm Inventory Details</h1>
+
+    <form asp-action="Add" method="post">
+        <input type="hidden" asp-for="Inventory.Id" />
+        <div class="form-group">
+            <label>Name</label>
+            <span>@Model.Inventory.Name</span>
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <span>@Model.Inventory.Description</span>
+        </div>
+        <div class="form-group">
+            <label>Price</label>
+            <span>@Model.Inventory.Price</span>
+        </div>
+          @*<div class="form-group">
+            <label>CreatedAt</label>
+            <span>@Model.Inventory.CreatedAt</span>
+        </div>*@
+        <button type="submit" name="command" value="back" class="btn btn-secondary">Back</button>
+        <button type="submit" name="command" value="save" class="btn btn-primary">Save</button>
+    </form>
+}
+<div>
+    <a asp-action="GetInventorys">Back to List</a>
+</div>
+@*@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}*@
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
